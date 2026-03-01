@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Board from "./Components/Board";
 
 function App() {
+  const [columns, setColumns] = useState(() => {
+    const saved = localStorage.getItem("board");
+    return saved
+      ? JSON.parse(saved)
+      : [
+          { id: "1", title: "To Do", tasks: [] },
+          { id: "2", title: "In Progress", tasks: [] },
+          { id: "3", title: "Done", tasks: [] }
+        ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("board", JSON.stringify(columns));
+  }, [columns]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Kanban Board</h1>
+      <Board columns={columns} setColumns={setColumns} />
     </div>
   );
 }
