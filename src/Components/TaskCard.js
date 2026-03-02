@@ -1,18 +1,18 @@
-import React from "react";
-import TaskCard from "./TaskCard";
+import React, { useState } from "react";
 
-function Column({ column, columns, setColumns }) {
+function TaskCard({ task, column, columns, setColumns }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(task.title);
 
-  // ➕ Add Task
-  const addTask = () => {
-    const title = prompt("Enter task name:");
-    if (!title) return;
+  const currentIndex = columns.findIndex(c => c.id === column.id);
 
+  // 🗑 Delete Task
+  const deleteTask = () => {
     const updatedColumns = columns.map(col =>
       col.id === column.id
         ? {
             ...col,
-            tasks: [...col.tasks, { id: Date.now(), title }]
+            tasks: col.tasks.filter(t => t.id !== task.id)
           }
         : col
     );
@@ -20,61 +20,101 @@ function Column({ column, columns, setColumns }) {
     setColumns(updatedColumns);
   };
 
-  // 🗑 Delete Column
-  const deleteColumn = () => {
-    if (columns.length === 1) {
-      alert("At least one column is required");
-      return;
-    }
+  // ➡ Move Right
+  const moveRight = () => {
+    if (currentIndex === columns.length - 1) return;
 
-    const confirmDelete = window.confirm("Delete this column?");
-    if (!confirmDelete) return;
+    const nextColumn = columns[currentIndex + 1];
 
-    const updatedColumns = columns.filter(
-      col => col.id !== column.id
-    );
+    const updatedColumns = columns.map(col => {
+      if (col.id === column.id) {
+        return {
+          ...col,
+          tasks: col.tasks.filter(t => t.id !== task.id)
+        };
+      }
+      if (col.id === nextColumn.id) {
+        return {
+          ...col,
+          tasks: [...col.tasks, task]
+        };
+      }
+      return col;
+    });
 
     setColumns(updatedColumns);
   };
 
+  // ⬅ Move Left
+  const moveLeft = () => {
+    if (currentIndex === 0) return;
+
+    const previousColumn = columns[currentIndex - 1];
+
+    const updatedColumns = columns.map(col => {
+      if (col.id === column.id) {
+        return {
+          ...col,
+          tasks: col.tasks.filter(t => t.id !== task.id)
+        };
+      }
+      if (col.id === previousColumn.id) {
+        return {
+          ...col,
+          tasks: [...col.tasks, task]
+        };
+      }
+      return col;
+    });
+
+    setColumns(updatedColumns);
+  };
+
+  // ✏ Save Edit
+  const saveEdit = () => {
+    if (!newTitle.trim()) return;
+
+    const updatedColumns = columns.map(col =>
+      col.id === column.id
+        ? {
+            ...col,
+            tasks: col.tasks.map(t =>
+              t.id === task.id ? { ...t, title: newTitle } : t
+            )
+          }
+        : col
+    );
+
+    setColumns(updatedColumns);
+    setIsEditing(false);
+  };
+
   return (
-    <div className="column">
-      <h3>{column.title}</h3>
+    <>
+      {isEditing ? (
+        <>
+          <input
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+          />
+          <button onClick={saveEdit}>Save</button>
+        </>
+      ) : (
+        <>
+          <button onClick={() => setIsEditing(true)}>Edit</button>
+          <button onClick={deleteTask}>Delete</button>
 
-      <button className="delete-column" onClick={deleteColumn}>
-        Delete Column
-      </button>
+          {currentIndex > 0 && (
+            <button onClick={moveLeft}>⬅</button>
+          )}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Task</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {column.tasks.map(task => (
-            <tr key={task.id}>
-              <td>{task.title}</td>
-              <td>
-                <TaskCard
-                  task={task}
-                  column={column}
-                  columns={columns}
-                  setColumns={setColumns}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <button className="add-task" onClick={addTask}>
-        + Add Task
-      </button>
-    </div>
+          {currentIndex < columns.length - 1 && (
+            <button onClick={moveRight}>➡</button>
+          )}
+        </>
+      )}
+    </>
   );
 }
 
-export default Column;
+export default TaskCard;
