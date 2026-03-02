@@ -1,13 +1,18 @@
 import React from "react";
+import TaskCard from "./TaskCard";
 
-function TaskCard({ task, column, columns, setColumns }) {
+function Column({ column, columns, setColumns }) {
 
-  const deleteTask = () => {
+  // ➕ Add Task
+  const addTask = () => {
+    const title = prompt("Enter task name:");
+    if (!title) return;
+
     const updatedColumns = columns.map(col =>
       col.id === column.id
         ? {
             ...col,
-            tasks: col.tasks.filter(t => t.id !== task.id)
+            tasks: [...col.tasks, { id: Date.now(), title }]
           }
         : col
     );
@@ -15,38 +20,61 @@ function TaskCard({ task, column, columns, setColumns }) {
     setColumns(updatedColumns);
   };
 
-  const moveRight = () => {
-    const currentIndex = columns.findIndex(c => c.id === column.id);
-    if (currentIndex === columns.length - 1) return;
+  // 🗑 Delete Column
+  const deleteColumn = () => {
+    if (columns.length === 1) {
+      alert("At least one column is required");
+      return;
+    }
 
-    const nextColumn = columns[currentIndex + 1];
+    const confirmDelete = window.confirm("Delete this column?");
+    if (!confirmDelete) return;
 
-    const updatedColumns = columns.map(col => {
-      if (col.id === column.id) {
-        return {
-          ...col,
-          tasks: col.tasks.filter(t => t.id !== task.id)
-        };
-      }
-      if (col.id === nextColumn.id) {
-        return {
-          ...col,
-          tasks: [...col.tasks, task]
-        };
-      }
-      return col;
-    });
+    const updatedColumns = columns.filter(
+      col => col.id !== column.id
+    );
 
     setColumns(updatedColumns);
   };
 
   return (
-    <div className="task">
-      <p>{task.title}</p>
-      <button onClick={deleteTask}>Delete</button>
-      <button onClick={moveRight}>➡ Move</button>
+    <div className="column">
+      <h3>{column.title}</h3>
+
+      <button className="delete-column" onClick={deleteColumn}>
+        Delete Column
+      </button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {column.tasks.map(task => (
+            <tr key={task.id}>
+              <td>{task.title}</td>
+              <td>
+                <TaskCard
+                  task={task}
+                  column={column}
+                  columns={columns}
+                  setColumns={setColumns}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <button className="add-task" onClick={addTask}>
+        + Add Task
+      </button>
     </div>
   );
 }
 
-export default TaskCard;
+export default Column;
