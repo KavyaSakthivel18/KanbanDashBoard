@@ -1,26 +1,36 @@
-import React, { useState, useEffect } from "react";
-import Board from "./Components/Board";
+import React, { useState } from "react";
+import Column from "./Components/Column";
+import "./App.css";
+
+const initialData = [
+  { id: 1, title: "To Do", tasks: [{ id: 101, title: "Task 1" }] },
+  { id: 2, title: "In Progress", tasks: [] },
+  { id: 3, title: "Done", tasks: [] },
+];
 
 function App() {
-  const [columns, setColumns] = useState(() => {
-    const saved = localStorage.getItem("board");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          { id: "1", title: "To Do", tasks: [] },
-          { id: "2", title: "In Progress", tasks: [] },
-          { id: "3", title: "Done", tasks: [] }
-        ];
-  });
+  const [columns, setColumns] = useState(initialData);
 
-  useEffect(() => {
-    localStorage.setItem("board", JSON.stringify(columns));
-  }, [columns]);
+  const addColumn = () => {
+    const title = prompt("Enter column name:");
+    if (!title) return;
+    setColumns([...columns, { id: Date.now(), title, tasks: [] }]);
+  };
 
   return (
-    <div>
-      <h1>Kanban Board</h1>
-      <Board columns={columns} setColumns={setColumns} />
+    <div className="app-container">
+      <h1>Project Board</h1>
+      <button className="global-add-btn" onClick={addColumn}>+ Add Column</button>
+      <div className="board">
+        {columns.map((col) => (
+          <Column 
+            key={col.id} 
+            column={col} 
+            columns={columns} 
+            setColumns={setColumns} 
+          />
+        ))}
+      </div>
     </div>
   );
 }

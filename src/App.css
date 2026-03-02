@@ -1,66 +1,99 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
+/* Layout Containers */
+.app-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: sans-serif;
 }
 
-h1 {
-  text-align: center;
-}
-
-/* Board Layout */
 .board {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  display: flex;
   gap: 20px;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding: 20px 0;
 }
 
-/* Column */
+/* Column Styles */
 .column {
-  background-color: #f2f2f2;
+  background-color: #ebedf0;
+  border-radius: 8px;
+  min-width: 320px;
   padding: 15px;
-  border-radius: 10px;
-  min-height: 300px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Table */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 10px 0;
-}
-
-th, td {
-  border: 1px solid #999;
-  padding: 8px;
-  text-align: center;
-}
-
-th {
-  background-color: #ddd;
-}
-
-/* Buttons */
-button {
-  padding: 5px 8px;
-  margin: 3px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.add-task {
-  background-color: #4CAF50;
-  color: white;
-  width: 100%;
-}
-
-.delete-column {
-  background-color: #f44336;
-  color: white;
-  width: 100%;
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
 }
 
-button:hover {
-  opacity: 0.8;
+/* Table Styles */
+.task-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 5px; /* Creates the "card" separation */
+}
+
+.task-table th {
+  text-align: left;
+  font-size: 0.8rem;
+  color: #666;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.task-table td {
+  background: white;
+  padding: 10px;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.task-table td:first-child { border-left: 1px solid #dee2e6; border-radius: 4px 0 0 4px; }
+.task-table td:last-child { border-right: 1px solid #dee2e6; border-radius: 0 4px 4px 0; }
+
+/* Buttons & Inputs */
+.button-group {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.icon-btn {
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.icon-btn.del { color: #dc3545; }
+.icon-btn:hover { background: #e2e2e2; }
+
+.add-task-btn {
+  width: 100%;
+  margin-top: 10px;
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-column-btn {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid #007bff;
 }
