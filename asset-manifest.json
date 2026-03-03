@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/KanbanDashBoard/static/css/main.cd9f697f.css",
-    "main.js": "/KanbanDashBoard/static/js/main.a1be99c3.js",
+    "main.css": "/KanbanDashBoard/static/css/main.fe07c058.css",
+    "main.js": "/KanbanDashBoard/static/js/main.438952c2.js",
     "static/js/453.0dbb4bb5.chunk.js": "/KanbanDashBoard/static/js/453.0dbb4bb5.chunk.js",
     "index.html": "/KanbanDashBoard/index.html",
-    "main.cd9f697f.css.map": "/KanbanDashBoard/static/css/main.cd9f697f.css.map",
-    "main.a1be99c3.js.map": "/KanbanDashBoard/static/js/main.a1be99c3.js.map",
+    "main.fe07c058.css.map": "/KanbanDashBoard/static/css/main.fe07c058.css.map",
+    "main.438952c2.js.map": "/KanbanDashBoard/static/js/main.438952c2.js.map",
     "453.0dbb4bb5.chunk.js.map": "/KanbanDashBoard/static/js/453.0dbb4bb5.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.cd9f697f.css",
-    "static/js/main.a1be99c3.js"
+    "static/css/main.fe07c058.css",
+    "static/js/main.438952c2.js"
   ]
 }
