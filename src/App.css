@@ -1,99 +1,96 @@
-/* Layout Containers */
-.app-container {
-  padding: 20px;
-  background-color: #f8f9fa;
-  min-height: 100vh;
-  font-family: sans-serif;
+:root {
+  --bg: #f4f7f9;
+  --card-bg: #ffffff;
+  --primary: #4a90e2;
+  --danger: #e74c3c;
+  --text: #2c3e50;
+  --border: #dfe6ed;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .board {
   display: flex;
-  gap: 20px;
+  gap: 24px;
+  padding: 30px;
   align-items: flex-start;
-  overflow-x: auto;
-  padding: 20px 0;
+  overflow-x: auto; /* R1: Responsive horizontal scroll */
 }
 
-/* Column Styles */
-.column {
-  background-color: #ebedf0;
-  border-radius: 8px;
-  min-width: 320px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.column-card {
+  background: #ebedf0;
+  border-radius: 10px;
+  min-width: 300px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 .column-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
-/* Table Styles */
+.badge {
+  background: #ccc;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
 .task-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 5px; /* Creates the "card" separation */
+  border-spacing: 0 8px;
 }
 
-.task-table th {
-  text-align: left;
-  font-size: 0.8rem;
-  color: #666;
-  padding: 5px;
-  border-bottom: 1px solid #ccc;
-}
-
-.task-table td {
+.task-row td {
   background: white;
-  padding: 10px;
-  border-top: 1px solid #dee2e6;
-  border-bottom: 1px solid #dee2e6;
+  padding: 12px;
+  border: 1px solid var(--border);
+  transition: transform 0.1s;
 }
 
-.task-table td:first-child { border-left: 1px solid #dee2e6; border-radius: 4px 0 0 4px; }
-.task-table td:last-child { border-right: 1px solid #dee2e6; border-radius: 0 4px 4px 0; }
-
-/* Buttons & Inputs */
-.button-group {
-  display: flex;
-  gap: 4px;
-  justify-content: flex-end;
+.task-row:hover td {
+  transform: translateY(-2px); /* R5: Extra UI polish */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-.icon-btn {
-  background: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 2px 6px;
-}
-
-.icon-btn.del { color: #dc3545; }
-.icon-btn:hover { background: #e2e2e2; }
-
-.add-task-btn {
-  width: 100%;
-  margin-top: 10px;
-  background: #28a745;
+.btn-primary {
+  background: var(--primary);
   color: white;
   border: none;
-  padding: 8px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-sm {
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  cursor: pointer;
   border-radius: 4px;
-  cursor: pointer;
 }
 
-.delete-column-btn {
-  background: none;
-  border: none;
-  color: #999;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
+.btn-sm.danger:hover { background: var(--danger); color: white; }
 
-.edit-input {
-  width: 100%;
-  padding: 4px;
-  border: 1px solid #007bff;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .board { flex-direction: column; align-items: stretch; }
+  .column-card { min-width: auto; }
 }

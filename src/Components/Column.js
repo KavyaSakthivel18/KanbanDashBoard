@@ -4,54 +4,54 @@ import TaskCard from "./TaskCard";
 function Column({ column, columns, setColumns }) {
   
   const addTask = () => {
-    const title = prompt("Enter task name:");
-    if (!title) return;
+    const title = prompt("Task description:");
+    if (!title?.trim()) return;
 
-    const updatedColumns = columns.map(col =>
+    setColumns(columns.map(col =>
       col.id === column.id
         ? { ...col, tasks: [...col.tasks, { id: Date.now(), title }] }
         : col
-    );
-    setColumns(updatedColumns);
+    ));
   };
 
   const deleteColumn = () => {
-    if (columns.length === 1) return alert("At least one column is required");
-    if (!window.confirm("Delete this column?")) return;
-
-    setColumns(columns.filter(col => col.id !== column.id));
+    if (columns.length === 1) return alert("Must have at least one column.");
+    if (window.confirm(`Delete "${column.title}"?`)) {
+      setColumns(columns.filter(col => col.id !== column.id));
+    }
   };
 
   return (
-    <div className="column">
+    <section className="column-card">
       <div className="column-header">
-        <h3>{column.title}</h3>
-        <button className="delete-column-btn" onClick={deleteColumn}>×</button>
+        <h3>{column.title} <span className="badge">{column.tasks.length}</span></h3>
+        <button className="btn-icon delete" onClick={deleteColumn} title="Delete Column">🗑</button>
       </div>
 
-      <table className="task-table">
-        <thead>
-          <tr>
-            <th>Task Description</th>
-            <th style={{ width: "120px" }}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {column.tasks.map(task => (
-            <tr key={task.id}>
+      <div className="table-container">
+        <table className="task-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th className="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {column.tasks.map(task => (
               <TaskCard
+                key={task.id}
                 task={task}
                 column={column}
                 columns={columns}
                 setColumns={setColumns}
               />
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <button className="add-task-btn" onClick={addTask}>+ Add Task</button>
-    </div>
+      <button className="btn-add-task" onClick={addTask}>+ Add Item</button>
+    </section>
   );
 }
 

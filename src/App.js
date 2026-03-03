@@ -1,27 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Column from "./Components/Column";
 import "./App.css";
 
 const initialData = [
-  { id: 1, title: "To Do", tasks: [{ id: 101, title: "Task 1" }] },
+  { id: 1, title: "To Do", tasks: [] },
   { id: 2, title: "In Progress", tasks: [] },
   { id: 3, title: "Done", tasks: [] },
 ];
 
 function App() {
-  const [columns, setColumns] = useState(initialData);
+  // R5: Local Storage Persistence
+  const [columns, setColumns] = useState(() => {
+    const saved = localStorage.getItem("kanban-data");
+    return saved ? JSON.parse(saved) : initialData;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("kanban-data", JSON.stringify(columns));
+  }, [columns]);
 
   const addColumn = () => {
     const title = prompt("Enter column name:");
-    if (!title) return;
+    if (!title?.trim()) return;
     setColumns([...columns, { id: Date.now(), title, tasks: [] }]);
   };
 
   return (
     <div className="app-container">
-      <h1>Project Board</h1>
-      <button className="global-add-btn" onClick={addColumn}>+ Add Column</button>
-      <div className="board">
+      <header>
+        <h1>Kanban Flow</h1>
+        <button className="btn-primary" onClick={addColumn}>+ New Column</button>
+      </header>
+      
+      <main className="board">
         {columns.map((col) => (
           <Column 
             key={col.id} 
@@ -30,7 +41,7 @@ function App() {
             setColumns={setColumns} 
           />
         ))}
-      </div>
+      </main>
     </div>
   );
 }

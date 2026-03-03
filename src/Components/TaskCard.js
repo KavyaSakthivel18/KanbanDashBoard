@@ -2,21 +2,13 @@ import React, { useState } from "react";
 
 function TaskCard({ task, column, columns, setColumns }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [newTitle, setNewTitle] = useState(task.title);
+  const [tempTitle, setTempTitle] = useState(task.title);
 
-  const currentIndex = columns.findIndex(c => c.id === column.id);
+  const idx = columns.findIndex(c => c.id === column.id);
 
-  const updateColumns = (newCols) => setColumns(newCols);
-
-  const deleteTask = () => {
-    updateColumns(columns.map(col => 
-      col.id === column.id ? { ...col, tasks: col.tasks.filter(t => t.id !== task.id) } : col
-    ));
-  };
-
-  const move = (direction) => {
-    const targetCol = columns[currentIndex + direction];
-    updateColumns(columns.map(col => {
+  const moveTask = (dir) => {
+    const targetCol = columns[idx + dir];
+    setColumns(columns.map(col => {
       if (col.id === column.id) return { ...col, tasks: col.tasks.filter(t => t.id !== task.id) };
       if (col.id === targetCol.id) return { ...col, tasks: [...col.tasks, task] };
       return col;
@@ -24,44 +16,42 @@ function TaskCard({ task, column, columns, setColumns }) {
   };
 
   const saveEdit = () => {
-    if (!newTitle.trim()) return;
-    updateColumns(columns.map(col =>
+    if (!tempTitle.trim()) return setIsEditing(false);
+    setColumns(columns.map(col =>
       col.id === column.id ? {
-        ...col, tasks: col.tasks.map(t => t.id === task.id ? { ...t, title: newTitle } : t)
+        ...col, tasks: col.tasks.map(t => t.id === task.id ? { ...t, title: tempTitle } : t)
       } : col
     ));
     setIsEditing(false);
   };
 
   return (
-    <>
-      <td className="task-title-cell">
+    <tr className="task-row">
+      <td className="task-cell">
         {isEditing ? (
           <input 
             className="edit-input"
-            value={newTitle} 
-            onChange={(e) => setNewTitle(e.target.value)} 
-            autoFocus
+            value={tempTitle} 
+            onChange={(e) => setTempTitle(e.target.value)}
+            onBlur={saveEdit}
+            autoFocus 
           />
         ) : (
-          task.title
+          <span onDoubleClick={() => setIsEditing(true)}>{task.title}</span>
         )}
       </td>
-      <td className="task-actions-cell">
-        <div className="button-group">
-          {isEditing ? (
-            <button className="save-btn" onClick={saveEdit}>Save</button>
-          ) : (
-            <>
-              <button className="icon-btn" onClick={() => setIsEditing(true)}>✏️</button>
-              <button className="icon-btn del" onClick={deleteTask}>🗑</button>
-              {currentIndex > 0 && <button className="icon-btn" onClick={() => move(-1)}>⬅</button>}
-              {currentIndex < columns.length - 1 && <button className="icon-btn" onClick={() => move(1)}>➡</button>}
-            </>
-          )}
+      <td className="task-actions">
+        <div className="action-buttons">
+          <button className="btn-sm" onClick={() => moveTask(-1)} disabled={idx === 0}>←</button>
+          <button className="btn-sm" onClick={() => moveTask(1)} disabled={idx === columns.length - 1}>→</button>
+          <button className="btn-sm danger" onClick={() => {
+            if(window.confirm("Delete task?")) {
+               setColumns(columns.map(c => c.id === column.id ? {...c, tasks: c.tasks.filter(t => t.id !== task.id)} : c))
+            }
+          }}>✕</button>
         </div>
       </td>
-    </>
+    </tr>
   );
 }
 
